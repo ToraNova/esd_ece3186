@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # this script is while-loop contained and runs at the start of the RPi boot
-# it loops every 30 seconds checking whether rain or not, and decide whether
+# it loops every 60 seconds checking whether rain or not, and decide whether
 # to open or close the lid
 # it also pushes data and reads from the rain boolean file
 import RPi.GPIO as gpio
@@ -98,7 +98,7 @@ try:
         # push lid and rain status
         r = requests.get(f'https://dweet.io/dweet/for/1b4859dd82e401fc0325e9134b6bac19ec4036bbace?lid={ldstr}&rs={rstr}')
         #print(r)
-        time.sleep(30)
+        time.sleep(60)
 
 except KeyboardInterrupt:
     gpio.cleanup()
