@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+# this script is while-loop contained and runs at the start of the RPi boot
+# it loops every 30 seconds checking whether rain or not, and decide whether
+# to open or close the lid
+# it also pushes data and reads from the rain boolean file
 import RPi.GPIO as gpio
 import time
 import requests
@@ -35,6 +39,7 @@ halfstep_seq_anticlockwise = [
 rbool = None
 ldopn = False
 
+# single shot functions (init, fire and de-init) OPEN
 def lidopen():
     gpio.setmode(gpio.BCM)
     for pin in control_pins:
@@ -49,6 +54,7 @@ def lidopen():
             gpio.output(pin, 0)
     gpio.cleanup()
 
+# single shot functions (init, fire and de-init) CLOSE
 def lidclose():
     gpio.setmode(gpio.BCM)
     for pin in control_pins:
@@ -67,13 +73,15 @@ ldstr = 'Closed'
 rstr = "uninit"
 try:
     while True:
-        with open("/home/pi/esd_ece3186/logs/rain_bool.out","r") as f: 
+        # main loop
+        with open("/home/pi/esd_ece3186/logs/rain_bool.out","r") as f:
             rbool = f.read()[:-1]
 
         if rbool == "1":
             rstr = "Raining !"
             if not ldopn:
                 # raining and not open
+                # so we open it
                 lidopen()
                 ldstr = 'Opened'
                 ldopn = True
@@ -82,10 +90,12 @@ try:
             rstr = "Not Raining !"
             if ldopn:
                 # not raining and open
+                # so we close it
                 lidclose()
                 ldstr = 'Closed'
                 ldopn = False
 
+        # push lid and rain status
         r = requests.get(f'https://dweet.io/dweet/for/1b4859dd82e401fc0325e9134b6bac19ec4036bbace?lid={ldstr}&rs={rstr}')
         #print(r)
         time.sleep(30)

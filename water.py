@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+# script to read water level from the adc on the i2c bus
+# decide whether or not the pump should be fired from the
+# water_bool file
 import Adafruit_ADS1x15
 
 adc = Adafruit_ADS1x15.ADS1115(address=0x48, busnum=1)
@@ -24,10 +27,10 @@ if water_level<15000:
 else:
     lvlbool = "1\n"
 
-with open("/home/pi/esd_ece3186/logs/water_percent.out", "w") as f: 
+with open("/home/pi/esd_ece3186/logs/water_percent.out", "w") as f:
     f.write(lvlstring)
 
-with open("/home/pi/esd_ece3186/logs/water_bool.out", "w") as f: 
+with open("/home/pi/esd_ece3186/logs/water_bool.out", "w") as f:
     f.write(lvlbool)
 
 #print ("Water Level:", water_level)

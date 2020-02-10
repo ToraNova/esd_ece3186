@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# simple script to read from the adc sensor on i2c bus
+# determine whether rain or not by a threshold. write to file
 import Adafruit_ADS1x15
 
 adc = Adafruit_ADS1x15.ADS1115(address=0x48, busnum=1)
@@ -16,5 +18,5 @@ else:
     rainbool = "0\n"
 
 print(rain_value)
-with open("/home/pi/esd_ece3186/logs/rain_bool.out", "w") as f: 
+with open("/home/pi/esd_ece3186/logs/rain_bool.out", "w") as f:
     f.write(rainbool)
